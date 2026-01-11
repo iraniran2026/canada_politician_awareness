@@ -1,109 +1,158 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Send to Press</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Send to Officials</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; line-height: 1.4; }
+    input { width: min(520px, 100%); padding: 10px; font-size: 16px; }
+    label { display: block; margin: 14px 0 6px; font-weight: 600; }
+    .row { margin: 10px 0; }
+    button { padding: 10px 14px; font-size: 16px; cursor: pointer; }
+    .hint { color: #555; font-size: 13px; margin-top: 6px; }
+    .checkbox { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0; }
+  </style>
 </head>
 <body>
 
-<h2>Send to news agencies</h2>
+  <h2>Send to Government Officials (BCC)</h2>
 
-<input id="name" placeholder="Your name"><br><br>
-<input id="email" placeholder="Your email"><br><br>
+  <div class="row">
+    <label for="name">Your name</label>
+    <input id="name" placeholder="Your name" autocomplete="name" />
+  </div>
 
-<button onclick="openEmail()">Ready</button>
+  <div class="row">
+    <label for="email">Your email</label>
+    <input id="email" placeholder="Your email" autocomplete="email" inputmode="email" />
+  </div>
 
-<script>
-const AGENCIES = [
-"mark.carney@parl.gc.ca",
-  "anita.anand@parl.gc.ca",
-  "francois-philippe.champagne@parl.gc.ca",
-  "gary.anandasangaree@parl.gc.ca",
-  "steven.mackinnon@parl.gc.ca",
-  "arif.virani@parl.gc.ca",
-  "yaara.saks@parl.gc.ca",
-  "jonathan.wilkinson@parl.gc.ca",
-  "perry.bellegarde@parl.gc.ca",
-  "gary.merasty@parl.gc.ca",
-  "lawrence.macaulay@parl.gc.ca",
-  "francois-philippe.champagne@parl.gc.ca",
-  "patty.hajdu@parl.gc.ca",
-  "karina.gould@parl.gc.ca",
-  "seamus.oregan@parl.gc.ca",
-  "pablo.rodriguez@parl.gc.ca",
-  "sean.fraser@parl.gc.ca",
-  "filomena.tassi@parl.gc.ca",
-  "lawrence.macaulay@parl.gc.ca",
-  "phil.mccoleman@parl.gc.ca",
-  "steven.guilbeault@parl.gc.ca",
-  "bill.blair@parl.gc.ca",
-  
-];
+  <div class="checkbox">
+    <input type="checkbox" id="includePahlavi" />
+    <label for="includePahlavi" style="margin:0; font-weight:600;">
+      Include the paragraph introducing Prince Reza Pahlavi as the political alternative
+      <div class="hint" style="font-weight:400;">Uncheck if you want to send the same message without naming a representative.</div>
+    </label>
+  </div>
 
-function openEmail() {
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
+  <button onclick="openEmail()">Ready</button>
 
-  if (!name || !email) {
-    alert("Please enter name and email");
-    return;
+  <script>
+  // NOTE: You can rename this list, but leaving it as-is to minimize changes.
+  // Also removed the trailing comma after the last item (some browsers are picky).
+  const AGENCIES = [
+    "mark.carney@parl.gc.ca",
+    "anita.anand@parl.gc.ca",
+    "francois-philippe.champagne@parl.gc.ca",
+    "gary.anandasangaree@parl.gc.ca",
+    "steven.mackinnon@parl.gc.ca",
+    "arif.virani@parl.gc.ca",
+    "yaara.saks@parl.gc.ca",
+    "jonathan.wilkinson@parl.gc.ca",
+    "perry.bellegarde@parl.gc.ca",
+    "gary.merasty@parl.gc.ca",
+    "lawrence.macaulay@parl.gc.ca",
+    "patty.hajdu@parl.gc.ca",
+    "karina.gould@parl.gc.ca",
+    "seamus.oregan@parl.gc.ca",
+    "pablo.rodriguez@parl.gc.ca",
+    "sean.fraser@parl.gc.ca",
+    "filomena.tassi@parl.gc.ca",
+    "phil.mccoleman@parl.gc.ca",
+    "steven.guilbeault@parl.gc.ca",
+    "bill.blair@parl.gc.ca"
+  ];
+
+  const DRIVE_LINK = "https://drive.google.com/drive/folders/1GiRvXfp4uksV6axhNkyDKzuazK8fqEqm?usp=drive_link";
+
+  function isValidEmail(email) {
+    // Simple sanity check (not perfect, but prevents obvious mistakes)
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  const subject = "Please be the Voice of Iranian Revolution Against the Islamic Regime";
+  function openEmail() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const includePahlavi = document.getElementById("includePahlavi").checked;
 
-  const body = `
-To the Editors and Journalists,
+    if (!name || !email) {
+      alert("Please enter name and email");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
 
-All communication with Iran has been deliberately cut by the Islamic Regime.
+    const subject = "Urgent: Iran communication blackout and protection of civilians";
 
-For three days now, we have had no contact with our families. We are entering the fourth day with no information about their safety. No calls. No internet. No truth.
+    const pahlaviBlock = includePahlavi ? `
+Iranians inside and outside Iran are naming Prince Reza Pahlavi as their political alternative.
 
-What we do know is this:
-People in Iran are in the streets day and night.
-They are unarmed.
-The Islamic Regime is using military weapons against civilians.
+He is recognized by the people as their political representative and the legitimate alternative to the Islamic Regime.
 
-Videos that manage to escape the blackout are horrifying.
-Information reaches us slowly, dangerously, and incompletely.
-This is not a protest anymore — this is a massacre under a communication blackout.
+You are obligated — morally and politically — to engage with him.
+To coordinate with him.
+To recognize him as the voice of the Iranian people.
+` : "";
 
-If human rights matter.
-If human life matters.
-Then this is the moment for action, not statements.
+    const body = `To Government Officials, Human Rights Institutions, and Policy Makers,
 
-We, as Iranians outside the country, cannot tell you how to act.
-We are worried about our families.
-You, as global media, know exactly what to do.
+Iran has now been under a complete communication blackout for three days.
 
-You have always claimed to stand for human rights.
-Now you must stand with the people of Iran.
+For over two weeks, millions of Iranians have been in the streets.
+The death toll has exceeded 2,000.
+The people are unarmed.
+The Islamic Regime is using military force against civilians.
 
-Be their voice.
-Break the silence.
-Expose what the regime is trying to hide.
+All internet, phone, and international communication channels are shut down.
+Iranians outside the country cannot reach their families.
+Information reaches us only in fragments.
+The images that do emerge are unbearable.
 
-History will remember who spoke — and who chose silence.
+This is no longer a domestic issue.
+This is a mass human rights crime in real time.
 
+The Islamic Regime has openly declared, through its own security council, that protesters must be confronted with maximum force.
+By its own admission, it has confirmed that it has lost all legitimacy.
 
-Please see a sample of images and videos in the Google Drive:
-https://drive.google.com/drive/folders/1GiRvXfp4uksV6axhNkyDKzuazK8fqEqm?usp=drive_link
+When a regime cuts all communication,
+when it shoots its own people,
+when it hides its crimes in darkness,
+it no longer represents a nation — it occupies it.
+${pahlaviBlock}
+The Iranian people are asking for leadership, coordination, and action — not sympathy.
 
+If you stand for democracy,
+if you stand for human rights,
+if you stand for the protection of civilian life,
+this is the moment to act.
+
+Stand with the Iranian people.
+Not in words.
+In action.
+
+History will not judge neutrality kindly.
 
 Iranian Community in Canada
 ${name}
 ${email}
+
+Please see a sample of images and videos in the Google Drive:
+${DRIVE_LINK}
 `;
 
-  const bcc = AGENCIES.join(",");
+    const bcc = AGENCIES.join(",");
 
-  const mailto =
-    `mailto:?bcc=${encodeURIComponent(bcc)}` +
-    `&subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`;
+    const mailto =
+      `mailto:?bcc=${encodeURIComponent(bcc)}` +
+      `&subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
 
-  window.location.href = mailto;
-}
-</script>
+    window.location.href = mailto;
+  }
+  </script>
 
 </body>
 </html>
